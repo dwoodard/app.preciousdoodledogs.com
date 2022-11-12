@@ -10,7 +10,7 @@
       <AdminNav/>
 
 
-      <v-main class="warm">
+      <v-main class="cool">
         <slot></slot>
       </v-main>
     </v-app>

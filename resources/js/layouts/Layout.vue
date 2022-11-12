@@ -38,7 +38,7 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-main class="warm">
+      <v-main class="cool">
         <slot></slot>
       </v-main>
 

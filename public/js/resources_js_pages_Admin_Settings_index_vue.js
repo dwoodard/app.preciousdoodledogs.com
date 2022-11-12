@@ -196,7 +196,7 @@ var render = function render() {
       app: ""
     }
   }, [_c("MainNav"), _vm._v(" "), _c("v-spacer"), _vm._v(" "), _c("ProfileMenu")], 1), _vm._v(" "), _c("AdminNav"), _vm._v(" "), _c("v-main", {
-    staticClass: "warm"
+    staticClass: "cool"
   }, [_vm._t("default")], 2)], 1), _vm._v(" "), _c("portal-target", {
     attrs: {
       name: "modals",

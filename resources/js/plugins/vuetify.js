@@ -37,7 +37,7 @@ const opts = {
         black: '#000000',
         white: '#ffffff',
         warm: '#F2F0EB',
-        cool: '#F9F9F9'
+        cool: '#E8FAFF'
       },
       dark: {
         primary: '#4caf50',
