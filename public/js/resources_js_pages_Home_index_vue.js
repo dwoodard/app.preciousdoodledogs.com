@@ -14,11 +14,74 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {},
   data: function data() {
-    return {};
+    return {
+      drawerSort: false,
+      drawerFilter: true,
+      scrollInvoked: 0,
+      // Sort
+      sortPrice: null,
+      sortPosted: null,
+      sortPostedItems: [{
+        text: 'Posted: Newest',
+        value: 'newest'
+      }, {
+        text: 'Posted: Oldest',
+        value: 'oldest'
+      }],
+      sortPriceItems: [{
+        text: 'Price: Low to High',
+        value: 'priceLow'
+      }, {
+        text: 'Price: High to Low',
+        value: 'priceHigh'
+      }],
+      sortAge: null,
+      sortAgeItems: [{
+        text: 'Age: Youngest',
+        value: 'ageYoung'
+      }, {
+        text: 'Age: Oldest',
+        value: 'ageOld'
+      }],
+      // Filter
+      filterType: null,
+      filterTypeItems: ['puppy', 'stud'],
+      filterBreed: null,
+      filterBreedItems: ['labradoodle', 'goldendoodle'],
+      filterAge: null,
+      filterGender: null,
+      filterGenderItems: ['male', 'female'],
+      filterSize: null,
+      filterSizeItems: ['teacup', 'toy', 'mini'],
+      filterPriceLow: null,
+      filterPriceHigh: null,
+      dogs: [{
+        name: 'Fido',
+        breed: 'labradoodle',
+        description: 'Fido is a Labradoodle. He is a very good boy!',
+        age: 3
+      }]
+    };
   },
-  computed: {},
-  methods: {},
-  components: {}
+  methods: {
+    clearSort: function clearSort() {
+      this.sortPrice = null;
+      this.sortPosted = null;
+      this.sortAge = null;
+    },
+    clearFilter: function clearFilter() {
+      this.filterType = null;
+      this.filterBreed = null;
+      this.filterAge = null;
+      this.filterGender = null;
+      this.filterSize = null;
+      this.filterPriceLow = null;
+      this.filterPriceHigh = null;
+    },
+    onScroll: function onScroll() {
+      this.scrollInvoked++;
+    }
+  }
 });
 
 /***/ }),
@@ -37,7 +100,321 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("v-container");
+  return _c("v-main", {
+    staticClass: "pa-0 ma-0"
+  }, [_c("v-container", {
+    attrs: {
+      fluid: ""
+    }
+  }, [_c("v-toolbar", [_c("v-text-field", {
+    attrs: {
+      "append-icon": "mdi-magnify",
+      label: "Search",
+      "single-line": "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.search,
+      callback: function callback($$v) {
+        _vm.search = $$v;
+      },
+      expression: "search"
+    }
+  }), _vm._v(" "), _c("v-spacer"), _vm._v(" "), _c("v-btn", {
+    attrs: {
+      text: ""
+    },
+    on: {
+      click: function click($event) {
+        _vm.drawerSort = !_vm.drawerSort;
+      }
+    }
+  }, [_vm._v(" Sort ")]), _vm._v(" "), _c("v-btn", {
+    attrs: {
+      text: ""
+    },
+    on: {
+      click: function click($event) {
+        _vm.drawerFilter = !_vm.drawerFilter;
+      }
+    }
+  }, [_vm._v(" Filter ")])], 1), _vm._v(" "), _c("v-card", {
+    directives: [{
+      name: "scroll",
+      rawName: "v-scroll.self",
+      value: _vm.onScroll,
+      expression: "onScroll",
+      modifiers: {
+        self: true
+      }
+    }],
+    staticClass: "overflow-y-auto",
+    attrs: {
+      "max-height": "100%"
+    }
+  }, [_c("v-card-text", _vm._l(120, function (n) {
+    return _c("div", {
+      key: n,
+      staticClass: "mb-4"
+    }, [_c("v-card", [_c("v-card-text", [_c("v-row", [_c("v-col", {
+      attrs: {
+        cols: "12",
+        sm: "4",
+        md: "3"
+      }
+    }, [_c("v-img", {
+      attrs: {
+        src: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
+        "aspect-ratio": "1.75",
+        contain: ""
+      }
+    })], 1), _vm._v(" "), _c("v-col", {
+      attrs: {
+        cols: "12",
+        sm: "8",
+        md: "9"
+      }
+    }, [_c("div", {
+      staticClass: "text-h5"
+    }, [_vm._v(_vm._s(_vm.dogs[0].name) + " " + _vm._s(Math.floor(Math.random(100) * 120)))]), _vm._v(" "), _c("div", {
+      staticClass: "text-subtitle-2"
+    }, [_vm._v(_vm._s(_vm.dogs[0].breed))]), _vm._v(" "), _c("div", {
+      staticClass: "text-body-2"
+    }, [_vm._v("\n                      " + _vm._s(_vm.dogs[0].description) + " " + _vm._s(Math.random(100)) + "\n                    ")])])], 1)], 1)], 1)], 1);
+  }), 0)], 1)], 1), _vm._v(" "), _c("div", {
+    attrs: {
+      id: "drawers"
+    }
+  }, [_c("v-navigation-drawer", {
+    attrs: {
+      absolute: "",
+      temporary: "",
+      app: ""
+    },
+    scopedSlots: _vm._u([{
+      key: "prepend",
+      fn: function fn() {
+        return [_c("v-list-item", {
+          attrs: {
+            "two-line": ""
+          }
+        }, [_c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Sort")])], 1)], 1)];
+      },
+      proxy: true
+    }]),
+    model: {
+      value: _vm.drawerSort,
+      callback: function callback($$v) {
+        _vm.drawerSort = $$v;
+      },
+      expression: "drawerSort"
+    }
+  }, [_vm._v(" "), _c("v-list", [_c("v-list-item-group", [_c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.sortPriceItems,
+      label: "Sort Price",
+      outlined: "",
+      dense: "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.sortPrice,
+      callback: function callback($$v) {
+        _vm.sortPrice = $$v;
+      },
+      expression: "sortPrice"
+    }
+  })], 1)], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.sortPostedItems,
+      label: "Sort Posted",
+      outlined: "",
+      dense: "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.sortPosted,
+      callback: function callback($$v) {
+        _vm.sortPosted = $$v;
+      },
+      expression: "sortPosted"
+    }
+  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.sortAgeItems,
+      label: "Sort Age",
+      outlined: "",
+      dense: "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.sortAge,
+      callback: function callback($$v) {
+        _vm.sortAge = $$v;
+      },
+      expression: "sortAge"
+    }
+  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.sortBreedItems,
+      label: "Sort Breed",
+      outlined: "",
+      dense: "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.sortBreed,
+      callback: function callback($$v) {
+        _vm.sortBreed = $$v;
+      },
+      expression: "sortBreed"
+    }
+  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("v-list-item", [_c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Clear Sort")])], 1), _vm._v(" "), _c("v-list-item-action", [_c("v-btn", {
+    attrs: {
+      icon: ""
+    },
+    on: {
+      click: function click($event) {
+        return _vm.clearSort();
+      }
+    }
+  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1), _vm._v(" "), _c("v-navigation-drawer", {
+    attrs: {
+      absolute: "",
+      temporary: "",
+      right: ""
+    },
+    scopedSlots: _vm._u([{
+      key: "prepend",
+      fn: function fn() {
+        return [_c("v-list-item", {
+          attrs: {
+            "two-line": ""
+          }
+        }, [_c("v-list-item-avatar", [_c("img", {
+          attrs: {
+            src: "https://randomuser.me/api/portraits/women/81.jpg"
+          }
+        })]), _vm._v(" "), _c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Filter Dogs")]), _vm._v(" "), _c("v-list-item-subtitle", [_vm._v("Total Dogs: " + _vm._s(_vm.dogs.length) + " / " + _vm._s(_vm.dogs.length))])], 1)], 1)];
+      },
+      proxy: true
+    }]),
+    model: {
+      value: _vm.drawerFilter,
+      callback: function callback($$v) {
+        _vm.drawerFilter = $$v;
+      },
+      expression: "drawerFilter"
+    }
+  }, [_vm._v(" "), _c("v-list", [_c("v-list-item", [_c("v-text-field", {
+    attrs: {
+      label: "Low",
+      type: "tel",
+      min: "0",
+      max: "5000",
+      "hide-details": "",
+      "prepend-icon": "mdi-currency-usd"
+    },
+    model: {
+      value: _vm.filterPriceLow,
+      callback: function callback($$v) {
+        _vm.filterPriceLow = $$v;
+      },
+      expression: "filterPriceLow"
+    }
+  }), _vm._v(" "), _c("v-text-field", {
+    attrs: {
+      label: "High",
+      type: "tel",
+      min: "0",
+      max: "5000",
+      "hide-details": "",
+      "prepend-icon": "mdi-currency-usd"
+    },
+    model: {
+      value: _vm.filterPriceHigh,
+      callback: function callback($$v) {
+        _vm.filterPriceHigh = $$v;
+      },
+      expression: "filterPriceHigh"
+    }
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.filterTypeItems,
+      label: "Type",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.filterType,
+      callback: function callback($$v) {
+        _vm.filterType = $$v;
+      },
+      expression: "filterType"
+    }
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.filterBreedItems,
+      label: "Breed",
+      chips: "",
+      multiple: "",
+      "hide-details": "",
+      "prepend-icon": "mdi-dog"
+    },
+    model: {
+      value: _vm.filterBreed,
+      callback: function callback($$v) {
+        _vm.filterBreed = $$v;
+      },
+      expression: "filterBreed"
+    }
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-range-slider", {
+    attrs: {
+      min: "0",
+      max: "100"
+    },
+    model: {
+      value: _vm.filterAge,
+      callback: function callback($$v) {
+        _vm.filterAge = $$v;
+      },
+      expression: "filterAge"
+    }
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.filterGenderItems,
+      label: "Gender"
+    },
+    model: {
+      value: _vm.filterGender,
+      callback: function callback($$v) {
+        _vm.filterGender = $$v;
+      },
+      expression: "filterGender"
+    }
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-select", {
+    attrs: {
+      items: _vm.filterSizeItems,
+      label: "Size",
+      multiple: "",
+      "hide-details": ""
+    },
+    model: {
+      value: _vm.filterSize,
+      callback: function callback($$v) {
+        _vm.filterSize = $$v;
+      },
+      expression: "filterSize"
+    }
+  })], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("v-list-item", [_c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Clear Filter")])], 1), _vm._v(" "), _c("v-list-item-action", [_c("v-btn", {
+    attrs: {
+      icon: ""
+    },
+    on: {
+      click: function click($event) {
+        return _vm.clearFilter();
+      }
+    }
+  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1)], 1)], 1)], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;

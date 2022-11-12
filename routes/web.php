@@ -44,19 +44,6 @@ Route::put('/user/profile-information', [\App\Http\Controllers\ProfileInformatio
     ->middleware(['auth'])
     ->name('user-profile-information.update');
 
-//Home
-Route::get('/',  function(){
-    // if site settings
-    //    if(Setting::config()->get('site.default_route') !== '') {
-    //         return redirect(Setting::config()->get('site.default_route'));
-    //    }
-
-    return Inertia::render('Home', [
-        'laravelVersion' => \Illuminate\Foundation\Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})
-->name('home');
 
 //Profile
 Route::get('/profile', function (){
@@ -67,6 +54,19 @@ Route::get('/profile', function (){
 
 //UserSettings
 Route::resource('/user-settings', 'UserSettingsController');
+
+
+//Home
+Route::get('/',  function () {
+    return Inertia::render('Home');
+})->name('home');
+
+//Cart
+Route::get('/cart',  function () {
+    return Inertia::render('Cart');
+})->name('cart');
+
+/******** Don't save below pages just in case user adds link name. */
 
 //Pages
 Route::get('/{link}',  [PageController::class, 'page'])->name('page');

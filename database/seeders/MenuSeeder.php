@@ -19,27 +19,16 @@ class MenuSeeder extends Seeder
         $header->location = 'header';
         $header->items = [
             [
-                'title' => 'Welcome',
-                'link' => '/welcome',
+                'title' => 'Dogs',
+                'link' => '/',
                 'type' => 'internal',
                 'target' => null,
-                'icon' => 'mdi-home',
+                'icon' => 'mdi-dog',
                 'show_icon' => true,
                 'order' => 0,
                 'admin' => false,
                 'hide_link' => false,
-            ],
-            [
-                'title' => 'About',
-                'link' => '/about',
-                'type' => 'internal',
-                'target' => null,
-                'icon' => 'mdi-account',
-                'show_icon' => true,
-                'order' => 1,
-                'admin' => false,
-                'hide_link' => false,
-            ]
+            ] 
         ];
         $header->save();
 
@@ -49,16 +38,27 @@ class MenuSeeder extends Seeder
         $footer->location = 'footer';
         $footer->items = [
             [
-                'title' => 'Welcome',
-                'link' => '/welcome',
+                'title' => 'Puppies',
+                'link' => '/',
                 'type' => 'internal',
                 'target' => '_self',
-                'icon' => 'mdi-home',
+                'icon' => 'mdi-dog',
                 'show_icon' => true,
                 'order' => 0,
                 'admin' => false,
                 'hide_link' => false,
-            ]
+            ],
+            [
+                'title' => 'Cart',
+                'link' => '/cart',
+                'type' => 'internal',
+                'target' => '_self',
+                'icon' => 'mdi-cart',
+                'show_icon' => true,
+                'order' => 0,
+                'admin' => false,
+                'hide_link' => false,
+            ],
         ];
         $footer->save();
 
