@@ -16,9 +16,10 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       drawerSort: false,
-      drawerFilter: true,
+      drawerFilter: false,
+      drawerSelectedDog: false,
       scrollInvoked: 0,
-      // Sort
+      selectedDog: null,
       sortPrice: null,
       sortPosted: null,
       sortPostedItems: [{
@@ -59,11 +60,19 @@ __webpack_require__.r(__webpack_exports__);
         name: 'Fido',
         breed: 'labradoodle',
         description: 'Fido is a Labradoodle. He is a very good boy!',
-        age: 3
+        age: 3,
+        images: ['https://images.dog.ceo/breeds/labradoodle/labradoodle-forrest.png', 'https://images.dog.ceo/breeds/labradoodle/Cali.jpeg', 'https://images.dog.ceo/breeds/labradoodle/lola.jpg', 'https://images.dog.ceo/breeds/mastiff-bull/n02108422_2678.jpg', 'https://images.dog.ceo/breeds/mastiff-bull/n02108422_683.jpg']
       }]
     };
   },
   methods: {
+    selectDog: function selectDog(dog) {
+      this.selectedDog = dog;
+      this.drawerSelectedDog = true;
+    },
+    toggleFavorite: function toggleFavorite(dog) {
+      dog.favorite = !dog.favorite;
+    },
     clearSort: function clearSort() {
       this.sortPrice = null;
       this.sortPosted = null;
@@ -111,7 +120,8 @@ var render = function render() {
       "append-icon": "mdi-magnify",
       label: "Search",
       "single-line": "",
-      "hide-details": ""
+      "hide-details": "",
+      clearable: ""
     },
     model: {
       value: _vm.search,
@@ -162,11 +172,25 @@ var render = function render() {
         sm: "4",
         md: "3"
       }
-    }, [_c("v-img", {
+    }, [_c("v-icon", {
+      attrs: {
+        color: "red"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleFavorite(n);
+        }
+      }
+    }, [_vm._v("mdi-heart-outline")]), _vm._v(" "), _c("v-img", {
       attrs: {
         src: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
         "aspect-ratio": "1.75",
         contain: ""
+      },
+      on: {
+        click: function click($event) {
+          return _vm.selectDog(_vm.dogs[0]);
+        }
       }
     })], 1), _vm._v(" "), _c("v-col", {
       attrs: {
@@ -174,13 +198,7 @@ var render = function render() {
         sm: "8",
         md: "9"
       }
-    }, [_c("div", {
-      staticClass: "text-h5"
-    }, [_vm._v(_vm._s(_vm.dogs[0].name) + " " + _vm._s(Math.floor(Math.random(100) * 120)))]), _vm._v(" "), _c("div", {
-      staticClass: "text-subtitle-2"
-    }, [_vm._v(_vm._s(_vm.dogs[0].breed))]), _vm._v(" "), _c("div", {
-      staticClass: "text-body-2"
-    }, [_vm._v("\n                      " + _vm._s(_vm.dogs[0].description) + " " + _vm._s(Math.random(100)) + "\n                    ")])])], 1)], 1)], 1)], 1);
+    }, [_c("div", [_vm._v(_vm._s(_vm.dogs[0].name) + " " + _vm._s(n))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.dogs[0].breed))]), _vm._v(" "), _c("div", [_vm._v("\n                    " + _vm._s(_vm.dogs[0].description) + " " + _vm._s(Math.random(100)) + "\n                  ")])])], 1)], 1)], 1)], 1);
   }), 0)], 1)], 1), _vm._v(" "), _c("div", {
     attrs: {
       id: "drawers"
@@ -291,11 +309,7 @@ var render = function render() {
           attrs: {
             "two-line": ""
           }
-        }, [_c("v-list-item-avatar", [_c("img", {
-          attrs: {
-            src: "https://randomuser.me/api/portraits/women/81.jpg"
-          }
-        })]), _vm._v(" "), _c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Filter Dogs")]), _vm._v(" "), _c("v-list-item-subtitle", [_vm._v("Total Dogs: " + _vm._s(_vm.dogs.length) + " / " + _vm._s(_vm.dogs.length))])], 1)], 1)];
+        }, [_c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Filter Dogs")]), _vm._v(" "), _c("v-list-item-subtitle", [_vm._v("Total Dogs: " + _vm._s(_vm.dogs.length) + " / " + _vm._s(_vm.dogs.length))])], 1)], 1)];
       },
       proxy: true
     }]),
@@ -414,7 +428,69 @@ var render = function render() {
         return _vm.clearFilter();
       }
     }
-  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1)], 1)], 1)], 1);
+  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1)], 1), _vm._v(" "), _c("v-navigation-drawer", {
+    attrs: {
+      right: "",
+      absolute: "",
+      width: "90%"
+    },
+    model: {
+      value: _vm.drawerSelectedDog,
+      callback: function callback($$v) {
+        _vm.drawerSelectedDog = $$v;
+      },
+      expression: "drawerSelectedDog"
+    }
+  }, [_vm.selectedDog ? _c("v-container", {
+    staticClass: "overflow-y-auto pa-0 ma-0",
+    attrs: {
+      fluid: "",
+      "max-height": "100%"
+    }
+  }, [_c("div", {
+    directives: [{
+      name: "scroll",
+      rawName: "v-scroll.self",
+      value: _vm.onScroll,
+      expression: "onScroll",
+      modifiers: {
+        self: true
+      }
+    }]
+  }, [_c("v-card", [_c("v-card-text", {
+    staticClass: "ma-0 pa-0"
+  }, [_c("v-carousel", {
+    attrs: {
+      touch: "",
+      continuous: "",
+      "show-arrows": false
+    }
+  }, _vm._l(_vm.dogs[0].images, function (image, i) {
+    return _c("v-carousel-item", {
+      key: i
+    }, [_c("v-img", {
+      attrs: {
+        "aspect-ratio": "1.77",
+        height: "100%",
+        src: image,
+        contains: ""
+      }
+    })], 1);
+  }), 1)], 1)], 1), _vm._v(" "), _c("v-container", [_c("v-card", [_c("v-card-text", [_c("v-row", [_c("v-col", {
+    attrs: {
+      cols: "12",
+      sm: "6"
+    }
+  }, [_c("v-card-title", {
+    staticClass: "headline"
+  }, [_vm._v(_vm._s(_vm.dogs[0].name))]), _vm._v(" "), _c("v-card-subtitle", [_vm._v(_vm._s(_vm.dogs[0].breed))])], 1), _vm._v(" "), _c("v-col", {
+    attrs: {
+      cols: "12",
+      sm: "6"
+    }
+  }, [_c("v-card-title", {
+    staticClass: "headline"
+  }, [_vm._v(_vm._s(_vm.dogs[0].price))]), _vm._v(" "), _c("v-card-subtitle", [_vm._v(_vm._s(_vm.dogs[0].description))])], 1)], 1)], 1)], 1)], 1)], 1)]) : _vm._e()], 1)], 1)], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;

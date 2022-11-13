@@ -1,8 +1,6 @@
 <template>
   <div>
-    <!-- Shopping cart view -->
     <v-container fluid>
-      <!--  -->
       Cart
     </v-container>
   </div>
