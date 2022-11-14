@@ -13,22 +13,22 @@
 
       <v-card v-scroll.self="onScroll" class="overflow-y-auto" max-height="100%">
         <v-card-text>
-          <div v-for="n in 120" :key="n" class="mb-4">
+          <div v-for="(dog, i) in dogs" :key="i" class="mb-4">
             <v-card>
               <v-card-text>
                 <v-row>
                   <v-col cols="12" sm="4" md="3">
-                    <v-icon color="red" @click="toggleFavorite(n)">mdi-heart-outline</v-icon>
+                    <v-icon color="red" @click="toggleFavorite(dog)">mdi-heart-outline</v-icon>
                     <v-img
                       src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
                       aspect-ratio="1.75" contain
-                      @click="selectDog(dogs[0])"/>
+                      @click="selectDog(dog)"/>
                   </v-col>
                   <v-col cols="12" sm="8" md="9">
-                    <div>{{ dogs[0].name }} {{ n }}</div>
-                    <div>{{ dogs[0].breed }}</div>
+                    <div>{{ dog.name }} {{ i }}</div>
+                    <div>{{ dog.breed }}</div>
                     <div>
-                      {{ dogs[0].description }} {{ Math.random(100) }}
+                      {{ dog.description }}
                     </div>
                   </v-col>
                 </v-row>
@@ -61,28 +61,19 @@
 
         <v-divider/>
 
-        <list-item-group>
+        <v-list-item-group>
           <v-list-item>
             <v-select v-model="sortPosted" :items="sortPostedItems" label="Sort Posted" outlined dense hide-details/>
           </v-list-item>
-        </list-item-group>
+        </v-list-item-group>
 
         <v-divider/>
 
-        <list-item-group>
+        <v-list-item-group>
           <v-list-item>
             <v-select v-model="sortAge" :items="sortAgeItems" label="Sort Age" outlined dense hide-details/>
           </v-list-item>
-        </list-item-group>
-
-
-        <v-divider/>
-
-        <list-item-group>
-          <v-list-item>
-            <v-select v-model="sortBreed" :items="sortBreedItems" label="Sort Breed" outlined dense hide-details/>
-          </v-list-item>
-        </list-item-group>
+        </v-list-item-group>
 
 
         <!-- reset all sort -->
@@ -139,8 +130,12 @@
           </v-list-item>
 
           <v-list-item>
-            <!-- less than or grater than -->
-            <v-range-slider v-model="filterAge" min="0" max="100"/>
+            <v-text-field v-model="filterAge"
+                          label="Age"
+                          type="tel"
+                          min="0" max="5000"
+                          hide-details
+                          prepend-icon="mdi-calendar"/>
           </v-list-item>
 
           <v-list-item>
@@ -165,47 +160,41 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-
-      <!-- Dog Drawer -->
-      <v-navigation-drawer v-model="drawerSelectedDog"
-
-                           right
-                           absolute
-                           width="90%">
-        <v-container v-if="selectedDog" fluid class="overflow-y-auto pa-0 ma-0" max-height="100%">
-          <div v-scroll.self="onScroll">
-            <v-card>
-              <v-card-text class="ma-0 pa-0">
-                <v-carousel touch continuous :show-arrows="false">
-                  <!-- template turn off controls -->
-
-                  <v-carousel-item v-for="(image, i) in dogs[0].images" :key="i">
-                    <v-img aspect-ratio="1.77" height="100%" :src="image" contains/>
-                  </v-carousel-item>
-                </v-carousel>
-              </v-card-text>
-            </v-card>
-
-            <v-container>
-              <v-card>
-                <v-card-text>
-                  <v-row>
-                    <v-col cols="12" sm="6">
-                      <v-card-title class="headline">{{ dogs[0].name }}</v-card-title>
-                      <v-card-subtitle>{{ dogs[0].breed }}</v-card-subtitle>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                      <v-card-title class="headline">{{ dogs[0].price }}</v-card-title>
-                      <v-card-subtitle>{{ dogs[0].description }}</v-card-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-            </v-container>
-          </div>
-        </v-container>
-      </v-navigation-drawer>
     </div>
+
+    <v-dialog v-model="dialogSelectedDog"
+              hide-overlay
+              scrollable
+              fullscreen
+              transition="dialog-bottom-transition">
+      <v-card v-if="selectedDog"
+              v-touch="{ down: () => dialogSelectedDog = false }">
+        <v-card-text>
+          <v-toolbar>
+            <v-btn icon @click="dialogSelectedDog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+
+            <v-toolbar-title>{{ selectedDog.name }}</v-toolbar-title>
+          </v-toolbar>
+          <v-carousel hide-delimiters>
+            <template #controls>
+              test
+            </template>
+            <v-carousel-item v-for="(item, i) in selectedDog.images" :key="i" v-touch="{ down: () => dialogSelectedDog = false }">
+              <v-img :src="item" aspect-ratio="1.75"/>
+            </v-carousel-item>
+          </v-carousel>
+
+          <v-card max-width="500" class="mx-auto mt-n4">
+            <!-- style="z-index:1000;" -->
+            <v-card-text>
+              {{ selectedDog.description }}
+            </v-card-text>
+          </v-card>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -218,9 +207,10 @@
       return {
         drawerSort: false,
         drawerFilter: false,
-        drawerSelectedDog: false,
+        dialogSelectedDog: false,
         scrollInvoked: 0,
 
+        search: '',
         selectedDog: null,
 
 
@@ -286,7 +276,7 @@
     methods: {
       selectDog(dog) {
         this.selectedDog = dog;
-        this.drawerSelectedDog = true;
+        this.dialogSelectedDog = true;
       },
       toggleFavorite(dog) {
         dog.favorite = !dog.favorite;

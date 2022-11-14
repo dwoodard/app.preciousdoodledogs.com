@@ -17,8 +17,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       drawerSort: false,
       drawerFilter: false,
-      drawerSelectedDog: false,
+      dialogSelectedDog: false,
       scrollInvoked: 0,
+      search: '',
       selectedDog: null,
       sortPrice: null,
       sortPosted: null,
@@ -68,7 +69,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     selectDog: function selectDog(dog) {
       this.selectedDog = dog;
-      this.drawerSelectedDog = true;
+      this.dialogSelectedDog = true;
     },
     toggleFavorite: function toggleFavorite(dog) {
       dog.favorite = !dog.favorite;
@@ -162,9 +163,9 @@ var render = function render() {
     attrs: {
       "max-height": "100%"
     }
-  }, [_c("v-card-text", _vm._l(120, function (n) {
+  }, [_c("v-card-text", _vm._l(_vm.dogs, function (dog, i) {
     return _c("div", {
-      key: n,
+      key: i,
       staticClass: "mb-4"
     }, [_c("v-card", [_c("v-card-text", [_c("v-row", [_c("v-col", {
       attrs: {
@@ -178,7 +179,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.toggleFavorite(n);
+          return _vm.toggleFavorite(dog);
         }
       }
     }, [_vm._v("mdi-heart-outline")]), _vm._v(" "), _c("v-img", {
@@ -189,7 +190,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.selectDog(_vm.dogs[0]);
+          return _vm.selectDog(dog);
         }
       }
     })], 1), _vm._v(" "), _c("v-col", {
@@ -198,7 +199,7 @@ var render = function render() {
         sm: "8",
         md: "9"
       }
-    }, [_c("div", [_vm._v(_vm._s(_vm.dogs[0].name) + " " + _vm._s(n))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.dogs[0].breed))]), _vm._v(" "), _c("div", [_vm._v("\n                    " + _vm._s(_vm.dogs[0].description) + " " + _vm._s(Math.random(100)) + "\n                  ")])])], 1)], 1)], 1)], 1);
+    }, [_c("div", [_vm._v(_vm._s(dog.name) + " " + _vm._s(i))]), _vm._v(" "), _c("div", [_vm._v(_vm._s(dog.breed))]), _vm._v(" "), _c("div", [_vm._v("\n                    " + _vm._s(dog.description) + "\n                  ")])])], 1)], 1)], 1)], 1);
   }), 0)], 1)], 1), _vm._v(" "), _c("div", {
     attrs: {
       id: "drawers"
@@ -242,7 +243,7 @@ var render = function render() {
       },
       expression: "sortPrice"
     }
-  })], 1)], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
+  })], 1)], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("v-list-item-group", [_c("v-list-item", [_c("v-select", {
     attrs: {
       items: _vm.sortPostedItems,
       label: "Sort Posted",
@@ -257,7 +258,7 @@ var render = function render() {
       },
       expression: "sortPosted"
     }
-  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
+  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("v-list-item-group", [_c("v-list-item", [_c("v-select", {
     attrs: {
       items: _vm.sortAgeItems,
       label: "Sort Age",
@@ -271,21 +272,6 @@ var render = function render() {
         _vm.sortAge = $$v;
       },
       expression: "sortAge"
-    }
-  })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("list-item-group", [_c("v-list-item", [_c("v-select", {
-    attrs: {
-      items: _vm.sortBreedItems,
-      label: "Sort Breed",
-      outlined: "",
-      dense: "",
-      "hide-details": ""
-    },
-    model: {
-      value: _vm.sortBreed,
-      callback: function callback($$v) {
-        _vm.sortBreed = $$v;
-      },
-      expression: "sortBreed"
     }
   })], 1)], 1), _vm._v(" "), _c("v-divider"), _vm._v(" "), _c("v-list-item", [_c("v-list-item-content", [_c("v-list-item-title", [_vm._v("Clear Sort")])], 1), _vm._v(" "), _c("v-list-item-action", [_c("v-btn", {
     attrs: {
@@ -381,10 +367,14 @@ var render = function render() {
       },
       expression: "filterBreed"
     }
-  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-range-slider", {
+  })], 1), _vm._v(" "), _c("v-list-item", [_c("v-text-field", {
     attrs: {
+      label: "Age",
+      type: "tel",
       min: "0",
-      max: "100"
+      max: "5000",
+      "hide-details": "",
+      "prepend-icon": "mdi-calendar"
     },
     model: {
       value: _vm.filterAge,
@@ -428,69 +418,76 @@ var render = function render() {
         return _vm.clearFilter();
       }
     }
-  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1)], 1), _vm._v(" "), _c("v-navigation-drawer", {
+  }, [_c("v-icon", [_vm._v("mdi-refresh")])], 1)], 1)], 1)], 1)], 1)], 1), _vm._v(" "), _c("v-dialog", {
     attrs: {
-      right: "",
-      absolute: "",
-      width: "90%"
+      "hide-overlay": "",
+      scrollable: "",
+      fullscreen: "",
+      transition: "dialog-bottom-transition"
     },
     model: {
-      value: _vm.drawerSelectedDog,
+      value: _vm.dialogSelectedDog,
       callback: function callback($$v) {
-        _vm.drawerSelectedDog = $$v;
+        _vm.dialogSelectedDog = $$v;
       },
-      expression: "drawerSelectedDog"
+      expression: "dialogSelectedDog"
     }
-  }, [_vm.selectedDog ? _c("v-container", {
-    staticClass: "overflow-y-auto pa-0 ma-0",
-    attrs: {
-      fluid: "",
-      "max-height": "100%"
-    }
-  }, [_c("div", {
+  }, [_vm.selectedDog ? _c("v-card", {
     directives: [{
-      name: "scroll",
-      rawName: "v-scroll.self",
-      value: _vm.onScroll,
-      expression: "onScroll",
-      modifiers: {
-        self: true
-      }
+      name: "touch",
+      rawName: "v-touch",
+      value: {
+        down: function down() {
+          return _vm.dialogSelectedDog = false;
+        }
+      },
+      expression: "{ down: () => dialogSelectedDog = false }"
     }]
-  }, [_c("v-card", [_c("v-card-text", {
-    staticClass: "ma-0 pa-0"
-  }, [_c("v-carousel", {
+  }, [_c("v-card-text", [_c("v-toolbar", [_c("v-btn", {
     attrs: {
-      touch: "",
-      continuous: "",
-      "show-arrows": false
+      icon: ""
+    },
+    on: {
+      click: function click($event) {
+        _vm.dialogSelectedDog = false;
+      }
     }
-  }, _vm._l(_vm.dogs[0].images, function (image, i) {
+  }, [_c("v-icon", [_vm._v("mdi-close")])], 1), _vm._v(" "), _c("v-toolbar-title", [_vm._v(_vm._s(_vm.selectedDog.name))])], 1), _vm._v(" "), _c("v-carousel", {
+    attrs: {
+      "hide-delimiters": ""
+    },
+    scopedSlots: _vm._u([{
+      key: "controls",
+      fn: function fn() {
+        return [_vm._v("\n            test\n          ")];
+      },
+      proxy: true
+    }], null, false, 4227830623)
+  }, [_vm._v(" "), _vm._l(_vm.selectedDog.images, function (item, i) {
     return _c("v-carousel-item", {
+      directives: [{
+        name: "touch",
+        rawName: "v-touch",
+        value: {
+          down: function down() {
+            return _vm.dialogSelectedDog = false;
+          }
+        },
+        expression: "{ down: () => dialogSelectedDog = false }"
+      }],
       key: i
     }, [_c("v-img", {
       attrs: {
-        "aspect-ratio": "1.77",
-        height: "100%",
-        src: image,
-        contains: ""
+        src: item,
+        "aspect-ratio": "1.75"
       }
     })], 1);
-  }), 1)], 1)], 1), _vm._v(" "), _c("v-container", [_c("v-card", [_c("v-card-text", [_c("v-row", [_c("v-col", {
+  })], 2), _vm._v(" "), _c("v-card", {
+    staticClass: "mx-auto mt-n4",
     attrs: {
-      cols: "12",
-      sm: "6"
+      "max-width": "500"
     }
-  }, [_c("v-card-title", {
-    staticClass: "headline"
-  }, [_vm._v(_vm._s(_vm.dogs[0].name))]), _vm._v(" "), _c("v-card-subtitle", [_vm._v(_vm._s(_vm.dogs[0].breed))])], 1), _vm._v(" "), _c("v-col", {
-    attrs: {
-      cols: "12",
-      sm: "6"
-    }
-  }, [_c("v-card-title", {
-    staticClass: "headline"
-  }, [_vm._v(_vm._s(_vm.dogs[0].price))]), _vm._v(" "), _c("v-card-subtitle", [_vm._v(_vm._s(_vm.dogs[0].description))])], 1)], 1)], 1)], 1)], 1)], 1)]) : _vm._e()], 1)], 1)], 1);
+  }, [_c("v-card-text", [_vm._v("\n            " + _vm._s(_vm.selectedDog.description) + "\n          ")])], 1)], 1)], 1) : _vm._e()], 1)], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;
